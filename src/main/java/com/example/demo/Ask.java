@@ -1,5 +1,6 @@
 package com.example.demo;
 
+import com.example.openai.completion.CompletionChoice;
 import com.example.openai.completion.CompletionRequest;
 import com.example.service.OpenAiService;
 
@@ -35,8 +36,11 @@ public class Ask {
         
         //service.createCompletion(completionRequest).getChoices().forEach(System.out::println);
         try {
-            answer = service.createCompletion(completionRequest).getChoices().get(0).getText();
+            java.util.List<CompletionChoice> choices = service.createCompletion(completionRequest).getChoices();
+            answer = choices.get(0).getText();
+            System.out.println("Answer has " + choices.size() + " choices");
         } catch(Exception ex) {
+            ex.printStackTrace();
             answer = ex.getMessage();
         }
 
