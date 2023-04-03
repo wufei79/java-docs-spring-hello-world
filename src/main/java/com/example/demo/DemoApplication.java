@@ -38,6 +38,9 @@ public class DemoApplication {
 		if (null==questionDTO.getQuestion()) {
 			return ResultModel.error("question is null");
 		}
-		return ResultModel.success(questionDTO.getQuestion());
+
+		String question = questionDTO.getQuestion();
+		String answer = Ask.askQuestion(questionDTO.getQuestion(), new Double(0));
+		return ResultModel.success("success", question, answer);
 	}
 }

@@ -6,23 +6,25 @@ import lombok.Data;
 public class ResultModel<T> {
     private int code;
     private String message="";
-    private T content;
+    private String question;
+    private T answer;
     public ResultModel(){
     }
     public ResultModel(int code,String message){
         this.code = code;
         this.message = message;
     }
-    public ResultModel(int code,String message,T content){
+    public ResultModel(int code,String message,String question, T answer){
         this.code = code;
         this.message = message;
-        this.content = content;
+        this.question = question;
+        this.answer = answer;
     }
-    public static <T> ResultModel<T> success(String message,T content){
-        return new ResultModel<T>(0,message,content);
+    public static <T> ResultModel<T> success(String message,String question,T answer){
+        return new ResultModel<T>(0,message,question,answer);
     }
-    public static <T> ResultModel<T> success(T content){
-        return new ResultModel<T>(0,"success",content);
+    public static <T> ResultModel<T> success(String question,T answer){
+        return new ResultModel<T>(0,"success",question,answer);
     }
     public static <T> ResultModel<T> error(int code,String message){
         return new ResultModel<T>(code,message);
