@@ -22,4 +22,14 @@ public class DemoApplication {
 	String test() {
 		return "it's a test";
 	}
+
+	@RequestMapping(value="/question",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultModel getAnswer(@RequestBody QuestionDTO questionDTO){
+		if (null==quesitonDTO) 
+			return ResultModel.error("questionDTO is null");
+		if (null==questionDTO.getQuestion())	
+			return ResultModel.error("question is null");
+		return questionDTO.getQuestion;
+	}
 }
