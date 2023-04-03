@@ -50,7 +50,7 @@ import java.util.concurrent.TimeUnit;
 public class OpenAiService {
 
     private static final String BASE_URL = "https://api.openai.com/";
-    private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(10);
+    private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
     private static final ObjectMapper errorMapper = defaultObjectMapper();
 
     private final OpenAiApi api;

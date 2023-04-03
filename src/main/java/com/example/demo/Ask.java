@@ -9,7 +9,8 @@ public class Ask {
         String answer;
 
 
-        String token = "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";
+        //String token = "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";
+        String token = "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";
         OpenAiService service = new OpenAiService(token);
 
         CompletionRequest completionRequest = CompletionRequest.builder()
