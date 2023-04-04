@@ -16,6 +16,10 @@ import java.util.List;
 public class Ask {
     static List<ChatMessage> conversation = new LinkedList<ChatMessage>();
 
+    public static void clearConversation() {
+        conversation.clear();
+    }
+
     public static String askCompletionQuestion(String token, String question, Double temperature, int maxTokens) {
         String answer;
 
@@ -70,8 +74,8 @@ public class Ask {
                 conversation.remove(conversation.size()-1);
 
                 answer = choices.get(0).getMessage().getContent();
-                conversation.add(new ChatMessage(ChatMessageRole.ASSISTANT.value(), question));
-                conversation.add(new ChatMessage(ChatMessageRole.SYSTEM.value(), answer));
+                conversation.add(new ChatMessage(ChatMessageRole.USER.value(), question));
+                conversation.add(new ChatMessage(ChatMessageRole.ASSISTANT.value(), answer));
             }
             System.out.println("Answer has " + choices.size() + " choices");
         } catch(Exception ex) {

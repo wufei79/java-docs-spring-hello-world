@@ -24,9 +24,10 @@ public class DemoApplication {
 		return "Hello 123!";
 	}
 
-	@RequestMapping("/test")
-	String test() {
-		return "it's a test";
+	@RequestMapping("/clearConversation")
+	public ResultModel clearConversation(){
+		Ask.clearConversation();
+		return ResultModel.success("success", "clearConversion", ""); 
 	}
 
 	@RequestMapping(value="completion/question",method = RequestMethod.POST)
