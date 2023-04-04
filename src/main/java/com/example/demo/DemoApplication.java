@@ -29,9 +29,9 @@ public class DemoApplication {
 		return "it's a test";
 	}
 
-	@RequestMapping(value="/question",method = RequestMethod.POST)
+	@RequestMapping(value="completion/question",method = RequestMethod.POST)
     @ResponseBody
-    public ResultModel getAnswer(@RequestBody QuestionDTO questionDTO){
+    public ResultModel getCompletionAnswer(@RequestBody QuestionDTO questionDTO){
 		if (null==questionDTO) {
 			return ResultModel.error("questionDTO is null");
 		}
@@ -40,7 +40,22 @@ public class DemoApplication {
 		}
 
 		String question = questionDTO.getQuestion();
-		String answer = Ask.askQuestion(questionDTO.getToken(), questionDTO.getQuestion(), new Double(0));
+		String answer = Ask.askCompletionQuestion(questionDTO.getToken(), questionDTO.getQuestion(), new Double(0), questionDTO.getMaxTokens());
+		return ResultModel.success("success", question, answer);
+	}
+
+	@RequestMapping(value="chat/question",method = RequestMethod.POST)
+    @ResponseBody
+    public ResultModel getChatAnswer(@RequestBody QuestionDTO questionDTO){
+		if (null==questionDTO) {
+			return ResultModel.error("questionDTO is null");
+		}
+		if (null==questionDTO.getQuestion()) {
+			return ResultModel.error("question is null");
+		}
+
+		String question = questionDTO.getQuestion();
+		String answer = Ask.askChatQuestion(questionDTO.getToken(), questionDTO.getQuestion(), new Double(0), questionDTO.getMaxTokens());
 		return ResultModel.success("success", question, answer);
 	}
 }

@@ -6,5 +6,5 @@ import lombok.Data;
 public class QuestionDTO {
     private String token;
     private String question;
-    
+    private int maxTokens;
 }
