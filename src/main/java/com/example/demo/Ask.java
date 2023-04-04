@@ -70,7 +70,8 @@ public class Ask {
                 conversation.remove(conversation.size()-1);
 
                 answer = choices.get(0).getMessage().getContent();
-                conversation.add(new ChatMessage(ChatMessageRole.ASSISTANT.value(), answer));
+                conversation.add(new ChatMessage(ChatMessageRole.ASSISTANT.value(), question));
+                conversation.add(new ChatMessage(ChatMessageRole.SYSTEM.value(), answer));
             }
             System.out.println("Answer has " + choices.size() + " choices");
         } catch(Exception ex) {
