@@ -40,7 +40,7 @@ public class DemoApplication {
 		}
 
 		String question = questionDTO.getQuestion();
-		String answer = Ask.askQuestion(questionDTO.getQuestion(), new Double(0));
+		String answer = Ask.askQuestion(questionDTO.getToken(), questionDTO.getQuestion(), new Double(0));
 		return ResultModel.success("success", question, answer);
 	}
 }
