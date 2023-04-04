@@ -2,18 +2,18 @@ package com.example.demo;
 
 import com.example.openai.completion.CompletionChoice;
 import com.example.openai.completion.CompletionRequest;
+import com.example.openai.completion.chat.ChatCompletionRequest;
 import com.example.service.OpenAiService;
 
 public class Ask {
     public static String askQuestion(String token, String question, Double temperature) {
         String answer;
 
-
         OpenAiService service = new OpenAiService(token);
 
         CompletionRequest completionRequest = CompletionRequest.builder()
                 .prompt(question)
-                .model("gpt-3.5-turbo")
+                .model("text-davinci-003")
                 .echo(true)
                 .temperature(temperature)
                 .topP(1.0)
