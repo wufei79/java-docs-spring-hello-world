@@ -2,6 +2,7 @@ package com.example.controller;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,15 +23,14 @@ public class AskController {
 		return "Hello 123!";
 	}
 
-	@RequestMapping("/test")
-	public ResultModel test() {
-		String result = ask.test();
-		return ResultModel.success("success", "test", result); 
+	@RequestMapping("/testSave")
+	public ResultModel testSave() {
+		return ResultModel.success("success", "testSave", ask.testSave());
 	}
 
-	@RequestMapping("/clearConversation")
-	public ResultModel clearConversation(){
-		ask.clearConversation();
+	@RequestMapping("/clearConversation/{conversationId}")
+	public ResultModel clearConversation(@PathVariable("conversationId") String conversationId){
+		ask.clearConversation(conversationId);
 		return ResultModel.success("success", "clearConversion", ""); 
 	}
 

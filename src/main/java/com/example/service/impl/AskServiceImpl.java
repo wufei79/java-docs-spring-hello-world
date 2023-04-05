@@ -24,10 +24,38 @@ public class AskServiceImpl implements AskService {
     public HistoryService historyService;
 
     private List<ChatMessage> conversation = new LinkedList<ChatMessage>();
+    private String conversationID = "";
 
     @Override
-    public void clearConversation() {
+    public void clearConversation(String conversationId) {
         conversation.clear();
+        this.conversationID = conversationId;
+    }
+
+    @Override
+    public String testSave() {
+        String answer = "";
+        History history = History.builder()
+                        .conversationId("conversationId")
+                        .model("model")
+                        .temperature(0.0)
+                        .maxTokens(0)
+                        .question("question")
+                        .answer("answer")
+                        .finishReason("finish_reason")
+                        .latest(1)
+                        .dateTime(new java.util.Date())
+                        .build();
+
+        int result = historyService.insert(history);
+
+        if (1==result) {
+            answer = "success";
+        } else {
+            answer = "fail";
+        }
+
+        return answer;
     }
 
     @Override
@@ -52,7 +80,25 @@ public class AskServiceImpl implements AskService {
             if (null != choices) {
                 if (null != choices.get(0)) {
                     answer = choices.get(0).getText();
-                    System.out.println("Answer has " + choices.size() + " choices");
+                    //System.out.println("Answer has " + choices.size() + " choices");
+
+                    History history = History.builder()
+                        .conversationId("completion")
+                        .model(completionRequest.getModel())
+                        .temperature(completionRequest.getTemperature())
+                        .maxTokens(completionRequest.getMaxTokens())
+                        .question(question)
+                        .answer(answer)
+                        .finishReason(choices.get(0).getFinish_reason())
+                        .latest(1)
+                        .dateTime(new java.util.Date())
+                        .build();
+
+                    int result = historyService.insert(history);
+
+                    if (1==result) {
+                        answer = "success";
+                    }
                 }
             }
         } catch(Exception ex) {
@@ -61,7 +107,6 @@ public class AskServiceImpl implements AskService {
         }
 
         return answer;
-
     }
 
     @Override
@@ -94,7 +139,7 @@ public class AskServiceImpl implements AskService {
                 conversation.add(new ChatMessage(ChatMessageRole.ASSISTANT.value(), answer));
 
                 History history = History.builder()
-                .conversationId("")
+                .conversationId(conversationID)
                 .model(chatCompletionRequest.getModel())
                 .temperature(chatCompletionRequest.getTemperature())
                 .maxTokens(chatCompletionRequest.getMaxTokens())
@@ -105,7 +150,11 @@ public class AskServiceImpl implements AskService {
                 .dateTime(new java.util.Date())
                 .build();
 
-                historyService.insert(history);
+                int result = historyService.insert(history);
+
+                if (1==result) {
+                    answer = "success";
+                }
             }
             System.out.println("Answer has " + choices.size() + " choices");
         } catch(Exception ex) {
@@ -117,32 +166,5 @@ public class AskServiceImpl implements AskService {
 
         return answer;
 
-    }
-
-    @Override
-    public String test() {
-        History history = History.builder()
-            .conversationId("")
-            .model("model")
-            .temperature(0.123)
-            .maxTokens(123)
-            .question("question")
-            .answer("answer")
-            .finishReason("choice.getFinishReason()")
-            .latest(1)
-            .dateTime(new java.util.Date())
-            .build();
-
-        int result = 0;
-        try {
-            if (null == historyService) {
-                System.out.println("historyService is null");
-            }
-            result = historyService.insert(history);
-        } catch(Exception ex) {
-            ex.printStackTrace();
-        }
-
-        return String.valueOf(result);
     }
 }
