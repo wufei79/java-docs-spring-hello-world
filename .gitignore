@@ -23,7 +23,5 @@
 hs_err_pid*
 src/main/resources/generator/generatorConfig.xml
 src/main/resources/application.yml
-src/main/resources/application.yaml
 src/main/scripts/DDL.sql
-target/classes/application.yaml
 target/classes/generator/generatorConfig.xml
