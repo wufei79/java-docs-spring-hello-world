@@ -1,7 +1,7 @@
-package com.example.demo;
+package com.example.controller;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -9,24 +9,28 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.dto.*;
+import com.example.service.AskService;
 import com.example.util.*;
 
-@SpringBootApplication
 @RestController
-public class DemoApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(DemoApplication.class, args);
-	}
+public class AskController {
+    @Autowired
+	public AskService ask;
 
 	@RequestMapping("/")
 	String sayHello() {
 		return "Hello 123!";
 	}
 
+	@RequestMapping("/test")
+	public ResultModel test() {
+		String result = ask.test();
+		return ResultModel.success("success", "test", result); 
+	}
+
 	@RequestMapping("/clearConversation")
 	public ResultModel clearConversation(){
-		Ask.clearConversation();
+		ask.clearConversation();
 		return ResultModel.success("success", "clearConversion", ""); 
 	}
 
@@ -41,7 +45,7 @@ public class DemoApplication {
 		}
 
 		String question = questionDTO.getQuestion();
-		String answer = Ask.askCompletionQuestion(questionDTO.getToken(), questionDTO.getQuestion(), new Double(0), questionDTO.getMaxTokens());
+		String answer = ask.askCompletionQuestion(questionDTO.getToken(), questionDTO.getQuestion(), new Double(0), questionDTO.getMaxTokens());
 		return ResultModel.success("success", question, answer);
 	}
 
@@ -56,7 +60,7 @@ public class DemoApplication {
 		}
 
 		String question = questionDTO.getQuestion();
-		String answer = Ask.askChatQuestion(questionDTO.getToken(), questionDTO.getQuestion(), new Double(0), questionDTO.getMaxTokens());
+		String answer = ask.askChatQuestion(questionDTO.getToken(), questionDTO.getQuestion(), new Double(0), questionDTO.getMaxTokens());
 		return ResultModel.success("success", question, answer);
 	}
 }

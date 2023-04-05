@@ -1,27 +1,38 @@
-package com.example.demo;
+package com.example.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.example.model.History;
 import com.example.openai.completion.CompletionChoice;
 import com.example.openai.completion.CompletionRequest;
 import com.example.openai.completion.chat.ChatCompletionChoice;
 import com.example.openai.completion.chat.ChatCompletionRequest;
 import com.example.openai.completion.chat.ChatMessage;
 import com.example.openai.completion.chat.ChatMessageRole;
+import com.example.service.AskService;
 import com.example.service.OpenAiService;
+import com.example.service.HistoryService;
 
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+@Service
+public class AskServiceImpl implements AskService {
+    @Autowired
+    public HistoryService historyService;
 
-public class Ask {
-    static List<ChatMessage> conversation = new LinkedList<ChatMessage>();
+    private List<ChatMessage> conversation = new LinkedList<ChatMessage>();
 
-    public static void clearConversation() {
+    @Override
+    public void clearConversation() {
         conversation.clear();
     }
 
-    public static String askCompletionQuestion(String token, String question, Double temperature, int maxTokens) {
-        String answer;
+    @Override
+    public String askCompletionQuestion(String token, String question, Double temperature, int maxTokens) {
+        String answer = "";
 
         OpenAiService service = new OpenAiService(token);
 
@@ -38,8 +49,12 @@ public class Ask {
         //service.createCompletion(completionRequest).getChoices().forEach(System.out::println);
         try {
             java.util.List<CompletionChoice> choices = service.createCompletion(completionRequest).getChoices();
-            answer = choices.get(0).getText();
-            System.out.println("Answer has " + choices.size() + " choices");
+            if (null != choices) {
+                if (null != choices.get(0)) {
+                    answer = choices.get(0).getText();
+                    System.out.println("Answer has " + choices.size() + " choices");
+                }
+            }
         } catch(Exception ex) {
             ex.printStackTrace();
             answer = ex.getMessage();
@@ -49,7 +64,8 @@ public class Ask {
 
     }
 
-    public static String askChatQuestion(String token, String question, Double temperature, int maxTokens) {
+    @Override
+    public String askChatQuestion(String token, String question, Double temperature, int maxTokens) {
         String answer = "";
 
         OpenAiService service = new OpenAiService(token);
@@ -72,10 +88,24 @@ public class Ask {
             java.util.List<ChatCompletionChoice> choices = service.createChatCompletion(chatCompletionRequest).getChoices();
             if (null != choices.get(0)) {
                 conversation.remove(conversation.size()-1);
-
-                answer = choices.get(0).getMessage().getContent();
+                ChatCompletionChoice choice = choices.get(0);
+                answer = choice.getMessage().getContent();
                 conversation.add(new ChatMessage(ChatMessageRole.USER.value(), question));
                 conversation.add(new ChatMessage(ChatMessageRole.ASSISTANT.value(), answer));
+
+                History history = History.builder()
+                .conversationId("")
+                .model(chatCompletionRequest.getModel())
+                .temperature(chatCompletionRequest.getTemperature())
+                .maxTokens(chatCompletionRequest.getMaxTokens())
+                .question(question)
+                .answer(answer)
+                .finishReason(choice.getFinishReason())
+                .latest(1)
+                .dateTime(new java.util.Date())
+                .build();
+
+                historyService.insert(history);
             }
             System.out.println("Answer has " + choices.size() + " choices");
         } catch(Exception ex) {
@@ -87,5 +117,32 @@ public class Ask {
 
         return answer;
 
+    }
+
+    @Override
+    public String test() {
+        History history = History.builder()
+            .conversationId("")
+            .model("model")
+            .temperature(0.123)
+            .maxTokens(123)
+            .question("question")
+            .answer("answer")
+            .finishReason("choice.getFinishReason()")
+            .latest(1)
+            .dateTime(new java.util.Date())
+            .build();
+
+        int result = 0;
+        try {
+            if (null == historyService) {
+                System.out.println("historyService is null");
+            }
+            result = historyService.insert(history);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+
+        return String.valueOf(result);
     }
 }
