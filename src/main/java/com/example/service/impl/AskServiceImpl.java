@@ -3,7 +3,10 @@ package com.example.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.apache.commons.lang3.StringUtils;
+import com.example.dto.QuestionDTO;
 import com.example.model.History;
+import com.example.model.HistoryExample;
 import com.example.openai.completion.CompletionChoice;
 import com.example.openai.completion.CompletionRequest;
 import com.example.openai.completion.chat.ChatCompletionChoice;
@@ -23,13 +26,21 @@ public class AskServiceImpl implements AskService {
     @Autowired
     public HistoryService historyService;
 
-    private List<ChatMessage> conversation = new LinkedList<ChatMessage>();
-    private String conversationID = "";
+    OpenAiService service;
+
+    @Override
+    public String setKey(String key) {
+        service = new OpenAiService(key);
+        return "success";
+    }
+
+    //private List<ChatMessage> conversation = new LinkedList<ChatMessage>();
+    private String currentConversationID = "";
 
     @Override
     public void clearConversation(String conversationId) {
-        conversation.clear();
-        this.conversationID = conversationId;
+        //conversation.clear();
+        this.currentConversationID = conversationId;
     }
 
     @Override
@@ -59,19 +70,19 @@ public class AskServiceImpl implements AskService {
     }
 
     @Override
-    public String askCompletionQuestion(String token, String question, Double temperature, int maxTokens) {
+    public String askCompletionQuestion(QuestionDTO questionDTO) {
         String answer = "";
 
-        OpenAiService service = new OpenAiService(token);
+        //OpenAiService service = new OpenAiService(token);
 
         CompletionRequest completionRequest = CompletionRequest.builder()
-                .prompt(question)
+                .prompt(questionDTO.getQuestion())
                 .model("text-davinci-003")
                 .echo(true)
-                .temperature(temperature)
+                .temperature(questionDTO.getTemperature())
                 .topP(1.0)
                 .stop(Arrays.asList("\n","\n"))
-                .maxTokens(maxTokens)
+                .maxTokens(questionDTO.getMaxTokens())
                 .build();
         
         //service.createCompletion(completionRequest).getChoices().forEach(System.out::println);
@@ -87,7 +98,7 @@ public class AskServiceImpl implements AskService {
                         .model(completionRequest.getModel())
                         .temperature(completionRequest.getTemperature())
                         .maxTokens(completionRequest.getMaxTokens())
-                        .question(question)
+                        .question(questionDTO.getQuestion())
                         .answer(answer)
                         .finishReason(choices.get(0).getFinish_reason())
                         .latest(1)
@@ -110,53 +121,55 @@ public class AskServiceImpl implements AskService {
     }
 
     @Override
-    public String askChatQuestion(String token, String question, Double temperature, int maxTokens) {
+    public String askChatQuestion(QuestionDTO questionDTO) {
         String answer = "";
-
-        OpenAiService service = new OpenAiService(token);
 
         //List<ChatMessage> messages = new LinkedList<ChatMessage>();
         //messages.add(conversation.forEach(null));
-        conversation.add(new ChatMessage(ChatMessageRole.USER.value(), question));
+        currentConversationID = StringUtils.isNotBlank(questionDTO.getConversationId())?questionDTO.getConversationId():currentConversationID;
+        List<ChatMessage> conversation = loadHistoryConversations(currentConversationID, questionDTO.getConversationLength());
+        conversation.add(new ChatMessage(ChatMessageRole.USER.value(), questionDTO.getQuestion()));
 
         ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
                 .model("gpt-3.5-turbo")
                 .messages(conversation)
-                .temperature(temperature)
+                .temperature(questionDTO.getTemperature())
                 .topP(1.0)
                 .stop(null)
-                .maxTokens(maxTokens)
+                .maxTokens(questionDTO.getMaxTokens())
                 .build();
         
         //service.createCompletion(completionRequest).getChoices().forEach(System.out::println);
         try {
             java.util.List<ChatCompletionChoice> choices = service.createChatCompletion(chatCompletionRequest).getChoices();
-            if (null != choices.get(0)) {
-                conversation.remove(conversation.size()-1);
-                ChatCompletionChoice choice = choices.get(0);
-                answer = choice.getMessage().getContent();
-                conversation.add(new ChatMessage(ChatMessageRole.USER.value(), question));
-                conversation.add(new ChatMessage(ChatMessageRole.ASSISTANT.value(), answer));
+            if (null != choices) {
+                if (null != choices.get(0)) {
+                    conversation.remove(conversation.size()-1);
+                    ChatCompletionChoice choice = choices.get(0);
+                    //answer = choice.getMessage().getContent();
+                    //conversation.add(new ChatMessage(ChatMessageRole.USER.value(), questionDTO.getQuestion()));
+                    //conversation.add(new ChatMessage(ChatMessageRole.ASSISTANT.value(), answer));
 
-                History history = History.builder()
-                .conversationId(conversationID)
-                .model(chatCompletionRequest.getModel())
-                .temperature(chatCompletionRequest.getTemperature())
-                .maxTokens(chatCompletionRequest.getMaxTokens())
-                .question(question)
-                .answer(answer)
-                .finishReason(choice.getFinishReason())
-                .latest(1)
-                .dateTime(new java.util.Date())
-                .build();
+                    History history = History.builder()
+                    .conversationId(currentConversationID)
+                    .model(chatCompletionRequest.getModel())
+                    .temperature(chatCompletionRequest.getTemperature())
+                    .maxTokens(chatCompletionRequest.getMaxTokens())
+                    .question(questionDTO.getQuestion())
+                    .answer(answer)
+                    .finishReason(choice.getFinishReason())
+                    .latest(1)
+                    .dateTime(new java.util.Date())
+                    .build();
 
-                int result = historyService.insert(history);
+                    int result = historyService.insert(history);
 
-                if (1==result) {
-                    answer = "success";
+                    if (1==result) {
+                        answer = "success";
+                    }
                 }
             }
-            System.out.println("Answer has " + choices.size() + " choices");
+            //System.out.println("Answer has " + choices.size() + " choices");
         } catch(Exception ex) {
             conversation.remove(conversation.size()-1);
 
@@ -166,5 +179,34 @@ public class AskServiceImpl implements AskService {
 
         return answer;
 
+    }
+
+    private LinkedList<ChatMessage> loadHistoryConversations(String conversationId, int conversationLength) {
+        LinkedList<ChatMessage> conversations = new LinkedList<ChatMessage>();
+        HistoryExample example = new HistoryExample();
+        example.createCriteria().andConversationIdEqualTo(conversationId);
+        example.setOrderByClause("id asc");
+        
+        try {
+            List<History> histories = historyService.selectByExample(example);
+            if (null != histories) {
+                if (histories.size()>0) {
+                    for (int i=histories.size()<conversationLength?0:conversationLength-histories.size(); i<conversationLength; i++) {
+                        ChatMessage question = new ChatMessage();
+                        question.setRole(ChatMessageRole.USER.value());
+                        question.setContent(histories.get(i).getQuestion());
+                        conversations.add(question);
+                        
+                        ChatMessage answer = new ChatMessage();
+                        answer.setRole(ChatMessageRole.ASSISTANT.value());
+                        answer.setContent(histories.get(i).getAnswer());
+                        conversations.add(answer);
+                    }
+                }
+            }
+        }catch(Exception ex) {
+            throw ex;
+        }
+        return conversations;
     }
 }

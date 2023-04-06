@@ -1,11 +1,16 @@
 package com.example.service;
 
+import com.example.dto.QuestionDTO;
+
 public interface AskService {
     public String testSave();
 
+    public String setKey(String key);
+    
     public void clearConversation(String conversationId);
 
-    public String askCompletionQuestion(String token, String question, Double temperature, int maxTokens);
+    public String askCompletionQuestion(QuestionDTO questionDTO);
 
-    public String askChatQuestion(String token, String question, Double temperature, int maxTokens);
+    public String askChatQuestion(QuestionDTO questionDTO);
+
 }

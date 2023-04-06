@@ -2,10 +2,10 @@ spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
-    #url: jdbc:mysql://localhost:3306/zwlpda-database?useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=UT
-    #username: root
-    #password: root
-    url: ${AZURE_MYSQL_CONNECTIONSTRING}
+    url: jdbc:mysql://localhost:3306/zwlpda-database?useUnicode=true&characterEncoding=utf8&useSSL=true&serverTimezone=UT
+    username: root
+    password: 1qaz2wsx
+    #url: ${AZURE_MYSQL_CONNECTIONSTRING}
     
 
 

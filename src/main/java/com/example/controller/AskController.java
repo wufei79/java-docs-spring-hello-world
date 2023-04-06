@@ -28,6 +28,12 @@ public class AskController {
 		return ResultModel.success("success", "testSave", ask.testSave());
 	}
 
+	@RequestMapping("/setKey/{key}")
+	public ResultModel setKey(@PathVariable("key") String key) {
+		ask.setKey(key);
+		return ResultModel.success("success", "setKey", "success");
+	}
+
 	@RequestMapping("/clearConversation/{conversationId}")
 	public ResultModel clearConversation(@PathVariable("conversationId") String conversationId){
 		ask.clearConversation(conversationId);
@@ -45,7 +51,7 @@ public class AskController {
 		}
 
 		String question = questionDTO.getQuestion();
-		String answer = ask.askCompletionQuestion(questionDTO.getToken(), questionDTO.getQuestion(), new Double(0), questionDTO.getMaxTokens());
+		String answer = ask.askCompletionQuestion(questionDTO);
 		return ResultModel.success("success", question, answer);
 	}
 
@@ -60,7 +66,7 @@ public class AskController {
 		}
 
 		String question = questionDTO.getQuestion();
-		String answer = ask.askChatQuestion(questionDTO.getToken(), questionDTO.getQuestion(), new Double(0), questionDTO.getMaxTokens());
+		String answer = ask.askChatQuestion(questionDTO);
 		return ResultModel.success("success", question, answer);
 	}
 }
