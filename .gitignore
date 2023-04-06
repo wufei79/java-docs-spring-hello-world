@@ -27,3 +27,4 @@ src/main/scripts/DDL.sql
 target/classes/generator/generatorConfig.xml
 target/classes/application.yaml
 src/main/resources/application.yaml
+target/classes/application.yaml
