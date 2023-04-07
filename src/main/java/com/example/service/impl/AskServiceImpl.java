@@ -127,12 +127,12 @@ public class AskServiceImpl implements AskService {
         //List<ChatMessage> messages = new LinkedList<ChatMessage>();
         //messages.add(conversation.forEach(null));
         currentConversationID = StringUtils.isNotBlank(questionDTO.getConversationId())?questionDTO.getConversationId():currentConversationID;
-        List<ChatMessage> conversation = loadHistoryConversations(currentConversationID, questionDTO.getConversationLength());
-        conversation.add(new ChatMessage(ChatMessageRole.USER.value(), questionDTO.getQuestion()));
+        List<ChatMessage> conversations = loadHistoryConversations(currentConversationID, questionDTO.getConversationLength());
+        conversations.add(new ChatMessage(ChatMessageRole.USER.value(), questionDTO.getQuestion()));
 
         ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
                 .model("gpt-3.5-turbo")
-                .messages(conversation)
+                .messages(conversations)
                 .temperature(questionDTO.getTemperature())
                 .topP(1.0)
                 .stop(null)
@@ -144,9 +144,9 @@ public class AskServiceImpl implements AskService {
             java.util.List<ChatCompletionChoice> choices = service.createChatCompletion(chatCompletionRequest).getChoices();
             if (null != choices) {
                 if (null != choices.get(0)) {
-                    conversation.remove(conversation.size()-1);
                     ChatCompletionChoice choice = choices.get(0);
-                    //answer = choice.getMessage().getContent();
+                    answer = choice.getMessage().getContent();
+                    //conversation.remove(conversation.size()-1);
                     //conversation.add(new ChatMessage(ChatMessageRole.USER.value(), questionDTO.getQuestion()));
                     //conversation.add(new ChatMessage(ChatMessageRole.ASSISTANT.value(), answer));
 
@@ -171,7 +171,7 @@ public class AskServiceImpl implements AskService {
             }
             //System.out.println("Answer has " + choices.size() + " choices");
         } catch(Exception ex) {
-            conversation.remove(conversation.size()-1);
+            //conversation.remove(conversation.size()-1);
 
             ex.printStackTrace();
             answer = ex.getMessage();
@@ -205,6 +205,7 @@ public class AskServiceImpl implements AskService {
                 }
             }
         }catch(Exception ex) {
+            ex.printStackTrace();
             throw ex;
         }
         return conversations;
