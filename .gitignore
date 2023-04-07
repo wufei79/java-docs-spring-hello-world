@@ -26,3 +26,5 @@ src/main/scripts/DDL.sql
 target/classes/generator/generatorConfig.xml
 src/main/resources/application.yaml
 target/classes/application.yaml
+src/main/resources/application.yaml
+target/java-docs-spring-hello-world-0.0.1-SNAPSHOT.jar.original

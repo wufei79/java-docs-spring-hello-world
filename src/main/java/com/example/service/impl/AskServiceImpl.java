@@ -27,6 +27,7 @@ public class AskServiceImpl implements AskService {
     public HistoryService historyService;
 
     OpenAiService service;
+    static int maxConversationLength = 3;
 
     @Override
     public String setKey(String key) {
@@ -191,7 +192,23 @@ public class AskServiceImpl implements AskService {
             List<History> histories = historyService.selectByExample(example);
             if (null != histories) {
                 if (histories.size()>0) {
-                    for (int i=histories.size()<conversationLength?0:conversationLength-histories.size(); i<conversationLength; i++) {
+                    int start = 0;
+                    int end = 0;
+
+                    if (histories.size()<conversationLength) {
+                        start = 0;
+                        end = histories.size();
+                    } else {
+                        if (0 == conversationLength) {
+                            start = 0;
+                            end = histories.size()<maxConversationLength?histories.size():maxConversationLength;
+                        } else {
+                            start = histories.size() - conversationLength;
+                            end =  histories.size();
+                        }
+                    }
+                    
+                    for (int i=start; i<end; i++) {
                         ChatMessage question = new ChatMessage();
                         question.setRole(ChatMessageRole.USER.value());
                         question.setContent(histories.get(i).getQuestion());
