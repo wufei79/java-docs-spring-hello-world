@@ -9,13 +9,16 @@ import com.example.model.History;
 import com.example.model.HistoryExample;
 import com.example.openai.completion.CompletionChoice;
 import com.example.openai.completion.CompletionRequest;
+import com.example.openai.completion.CompletionResult;
 import com.example.openai.completion.chat.ChatCompletionChoice;
 import com.example.openai.completion.chat.ChatCompletionRequest;
+import com.example.openai.completion.chat.ChatCompletionResult;
 import com.example.openai.completion.chat.ChatMessage;
 import com.example.openai.completion.chat.ChatMessageRole;
 import com.example.service.AskService;
 import com.example.service.OpenAiService;
 import com.example.service.HistoryService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -37,6 +40,7 @@ public class AskServiceImpl implements AskService {
 
     //private List<ChatMessage> conversation = new LinkedList<ChatMessage>();
     private String currentConversationID = "";
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     @Override
     public void clearConversation(String conversationId) {
@@ -57,6 +61,7 @@ public class AskServiceImpl implements AskService {
                         .finishReason("finish_reason")
                         .latest(1)
                         .dateTime(new java.util.Date())
+                        .response("response")
                         .build();
 
         int result = historyService.insert(history);
@@ -88,7 +93,8 @@ public class AskServiceImpl implements AskService {
         
         //service.createCompletion(completionRequest).getChoices().forEach(System.out::println);
         try {
-            java.util.List<CompletionChoice> choices = service.createCompletion(completionRequest).getChoices();
+            CompletionResult completionResult = service.createCompletion(completionRequest);
+            java.util.List<CompletionChoice> choices = completionResult.getChoices();
             if (null != choices) {
                 if (null != choices.get(0)) {
                     answer = choices.get(0).getText();
@@ -104,6 +110,7 @@ public class AskServiceImpl implements AskService {
                         .finishReason(choices.get(0).getFinish_reason())
                         .latest(1)
                         .dateTime(new java.util.Date())
+                        .response(mapper.writeValueAsString(completionResult))
                         .build();
 
                     int result = historyService.insert(history);
@@ -142,7 +149,8 @@ public class AskServiceImpl implements AskService {
         
         //service.createCompletion(completionRequest).getChoices().forEach(System.out::println);
         try {
-            java.util.List<ChatCompletionChoice> choices = service.createChatCompletion(chatCompletionRequest).getChoices();
+            ChatCompletionResult chatCompletionResult = service.createChatCompletion(chatCompletionRequest);
+            java.util.List<ChatCompletionChoice> choices = chatCompletionResult.getChoices();
             if (null != choices) {
                 if (null != choices.get(0)) {
                     ChatCompletionChoice choice = choices.get(0);
@@ -161,6 +169,7 @@ public class AskServiceImpl implements AskService {
                     .finishReason(choice.getFinishReason())
                     .latest(1)
                     .dateTime(new java.util.Date())
+                    .response(mapper.writeValueAsString(chatCompletionResult))
                     .build();
 
                     int result = historyService.insert(history);

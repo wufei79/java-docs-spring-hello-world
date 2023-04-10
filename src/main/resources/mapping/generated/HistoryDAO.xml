@@ -73,7 +73,7 @@
   </sql>
   <sql id="Base_Column_List">
     id, conversation_id, model, temperature, max_tokens, question, answer, finish_reason, 
-    date_time, latest
+    date_time, latest, response
   </sql>
   <select id="selectByExample" parameterType="com.example.model.HistoryExample" resultMap="BaseResultMap">
     select
@@ -109,11 +109,11 @@
     insert into history (id, conversation_id, model, 
       temperature, max_tokens, question, 
       answer, finish_reason, date_time, 
-      latest)
+      latest, response)
     values (#{id,jdbcType=INTEGER}, #{conversationId,jdbcType=VARCHAR}, #{model,jdbcType=VARCHAR}, 
       #{temperature,jdbcType=DOUBLE}, #{maxTokens,jdbcType=INTEGER}, #{question,jdbcType=VARCHAR}, 
       #{answer,jdbcType=VARCHAR}, #{finishReason,jdbcType=VARCHAR}, #{dateTime,jdbcType=TIMESTAMP}, 
-      #{latest,jdbcType=INTEGER})
+      #{latest,jdbcType=INTEGER}, #{response,jdbcType=VARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.example.model.History">
     insert into history
@@ -148,6 +148,9 @@
       <if test="latest != null">
         latest,
       </if>
+      <if test="response != null">
+        response,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -179,6 +182,9 @@
       </if>
       <if test="latest != null">
         #{latest,jdbcType=INTEGER},
+      </if>
+      <if test="response != null">
+        #{response,jdbcType=VARCHAR},
       </if>
     </trim>
   </insert>
@@ -221,6 +227,9 @@
       <if test="record.latest != null">
         latest = #{record.latest,jdbcType=INTEGER},
       </if>
+      <if test="record.response != null">
+        latest = #{record.response,jdbcType=VARCHAR},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -237,7 +246,8 @@
       answer = #{record.answer,jdbcType=VARCHAR},
       finish_reason = #{record.finishReason,jdbcType=VARCHAR},
       date_time = #{record.dateTime,jdbcType=TIMESTAMP},
-      latest = #{record.latest,jdbcType=INTEGER}
+      latest = #{record.latest,jdbcType=INTEGER},
+      response = #{record.response,jdbcType=VARCHAR}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -272,6 +282,9 @@
       <if test="latest != null">
         latest = #{latest,jdbcType=INTEGER},
       </if>
+      <if test="response != null">
+        response = #{response,jdbcType=VARCHAR},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -285,7 +298,8 @@
       answer = #{answer,jdbcType=VARCHAR},
       finish_reason = #{finishReason,jdbcType=VARCHAR},
       date_time = #{dateTime,jdbcType=TIMESTAMP},
-      latest = #{latest,jdbcType=INTEGER}
+      latest = #{latest,jdbcType=INTEGER},
+      response = #{response,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

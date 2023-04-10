@@ -26,6 +26,8 @@ public class History {
 
     private Integer latest;
 
+    private String response;
+
     public Integer getId() {
         return id;
     }
@@ -104,5 +106,13 @@ public class History {
 
     public void setLatest(Integer latest) {
         this.latest = latest;
+    }
+
+    public String geResponse() {
+        return response;
+    }
+
+    public void setResponse(String response) {
+        this.response = response;
     }
 }
