@@ -14,7 +14,7 @@ import com.example.model.HistoryExample;
 import com.example.service.HistoryService;
 import com.example.util.ResultModel;
 
-@CrossOrigin
+@CrossOrigin(methods = {RequestMethod.GET,RequestMethod.OPTIONS})
 @RestController
 public class HistoryController {
     @Autowired
