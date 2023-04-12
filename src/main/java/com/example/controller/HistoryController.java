@@ -17,8 +17,8 @@ public class HistoryController {
     @Autowired
 	public HistoryService historyService;
 
-    @RequestMapping("/readAnswer/")
-	public ResultModel readAnswer(String conversationId) {
+    @RequestMapping("/readAnswer/{conversationId}")
+	public ResultModel readAnswer(@PathVariable("conversationId") String conversationId) {
 		String question = "",answer = "";
         HistoryExample example = new HistoryExample();
         example.createCriteria()
