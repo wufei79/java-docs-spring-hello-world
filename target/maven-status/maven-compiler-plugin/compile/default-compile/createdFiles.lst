@@ -1,3 +1,4 @@
+com\example\config\CrosFilter.class
 com\example\openai\completion\chat\ChatCompletionRequest$ChatCompletionRequestBuilder.class
 com\example\openai\finetune\HyperParameters.class
 com\example\openai\OpenAiService.class
@@ -48,6 +49,7 @@ com\example\model\HistoryExample$Criteria.class
 com\example\openai\completion\chat\ChatCompletionChunk.class
 com\example\openai\image\CreateImageRequest$CreateImageRequestBuilder.class
 com\example\openai\completion\chat\ChatCompletionChoice.class
+com\example\controller\HistoryController.class
 com\example\openai\moderation\Moderation.class
 com\example\openai\finetune\FineTuneResult.class
 com\example\openai\edit\EditUsage.class

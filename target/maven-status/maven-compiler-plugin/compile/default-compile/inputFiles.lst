@@ -43,6 +43,7 @@ d:\workspace\java-docs-spring-hello-world\src\main\java\com\example\openai\image
 d:\workspace\java-docs-spring-hello-world\src\main\java\com\example\controller\AskController.java
 d:\workspace\java-docs-spring-hello-world\src\main\java\com\example\service\AuthenticationInterceptor.java
 d:\workspace\java-docs-spring-hello-world\src\main\java\com\example\service\SSEFormatException.java
+d:\workspace\java-docs-spring-hello-world\src\main\java\com\example\controller\HistoryController.java
 d:\workspace\java-docs-spring-hello-world\src\main\java\com\example\openai\image\CreateImageVariationRequest.java
 d:\workspace\java-docs-spring-hello-world\src\main\java\com\example\openai\completion\chat\ChatCompletionResult.java
 d:\workspace\java-docs-spring-hello-world\src\main\java\com\example\openai\completion\CompletionResult.java
@@ -54,6 +55,7 @@ d:\workspace\java-docs-spring-hello-world\src\main\java\com\example\model\Histor
 d:\workspace\java-docs-spring-hello-world\src\main\java\com\example\openai\edit\EditChoice.java
 d:\workspace\java-docs-spring-hello-world\src\main\java\com\example\openai\moderation\ModerationCategoryScores.java
 d:\workspace\java-docs-spring-hello-world\src\main\java\com\example\util\ResultModel.java
+d:\workspace\java-docs-spring-hello-world\src\main\java\com\example\config\CrosFilter.java
 d:\workspace\java-docs-spring-hello-world\src\main\java\com\example\openai\moderation\ModerationRequest.java
 d:\workspace\java-docs-spring-hello-world\src\main\java\com\example\openai\moderation\Moderation.java
 d:\workspace\java-docs-spring-hello-world\src\main\java\com\example\openai\engine\Engine.java
