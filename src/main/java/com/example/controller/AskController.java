@@ -14,7 +14,6 @@ import com.example.dto.*;
 import com.example.service.AskService;
 import com.example.util.*;
 
-@CrossOrigin
 @RestController
 public class AskController {
     @Autowired
