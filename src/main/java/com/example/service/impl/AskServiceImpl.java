@@ -49,7 +49,7 @@ public class AskServiceImpl implements AskService {
     }
 
     @Override
-    public String testSave() {
+    public String testSave() throws Exception{
         String answer = "";
         History history = History.builder()
                         .conversationId("conversationId")
@@ -232,7 +232,6 @@ public class AskServiceImpl implements AskService {
             }
         }catch(Exception ex) {
             ex.printStackTrace();
-            throw ex;
         }
         return conversations;
     }

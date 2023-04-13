@@ -3,7 +3,7 @@ package com.example.service;
 import com.example.dto.QuestionDTO;
 
 public interface AskService {
-    public String testSave();
+    public String testSave() throws Exception;
 
     public String setKey(String key);
     

@@ -16,7 +16,7 @@ public class HistoryServiceImpl implements HistoryService {
     HistoryDAO HistoryDAO;
 
     @Override
-    public int insert(History history) {
+    public int insert(History history) throws Exception {
         // TODO Auto-generated method stub
         int result = 0;
         try {
@@ -28,13 +28,13 @@ public class HistoryServiceImpl implements HistoryService {
     }
 
     @Override
-    public List<History> selectByExample(HistoryExample example) {
+    public List<History> selectByExample(HistoryExample example) throws Exception{
         // TODO Auto-generated method stub
         return HistoryDAO.selectByExample(example);
     }
 
     @Override
-    public List<String> getConversationList() {
+    public List<String> getConversationList() throws Exception{
         return HistoryDAO.getConversationList();
     }
 

@@ -6,7 +6,7 @@ import com.example.model.HistoryExample;
 import java.util.List;
 
 public interface HistoryService {
-    int insert(History history);
-    List<History> selectByExample(HistoryExample example);
-    List<String> getConversationList();
+    int insert(History history) throws Exception;
+    List<History> selectByExample(HistoryExample example) throws Exception;
+    List<String> getConversationList() throws Exception;
 }

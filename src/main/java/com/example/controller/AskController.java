@@ -25,7 +25,7 @@ public class AskController {
 	}
 
 	@RequestMapping("/testSave")
-	public ResultModel testSave() {
+	public ResultModel testSave() throws Exception {
 		return ResultModel.success("success", "testSave", ask.testSave());
 	}
 
