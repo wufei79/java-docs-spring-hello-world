@@ -30,4 +30,6 @@ public interface HistoryDAO {
     int updateByPrimaryKeySelective(History record);
 
     int updateByPrimaryKey(History record);
+
+    List<String> getConversationList();
 }

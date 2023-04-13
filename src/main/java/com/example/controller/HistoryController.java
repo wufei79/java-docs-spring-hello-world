@@ -35,4 +35,9 @@ public class HistoryController {
 		return ResultModel.success("success", question, answer);
 	}
 
+    @RequestMapping("/getConversationList")
+    public ResultModel getConversationList() {
+        return ResultModel.success("success", "getConversationList", historyService.getConversationList());
+    }
+
 }

@@ -33,6 +33,11 @@ public class HistoryServiceImpl implements HistoryService {
         return HistoryDAO.selectByExample(example);
     }
 
+    @Override
+    public List<String> getConversationList() {
+        return HistoryDAO.getConversationList();
+    }
+
 
     /*
     @Override
