@@ -302,7 +302,7 @@
       response = #{response,jdbcType=VARCHAR}
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <select id="getConversationList" resultType="java.util.List">
+  <select id="getConversationList" resultType="java.lang.String">
     select distinct conversation_id from history
   </select>
 </mapper>
