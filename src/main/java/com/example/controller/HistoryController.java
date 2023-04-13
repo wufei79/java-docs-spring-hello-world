@@ -37,7 +37,8 @@ public class HistoryController {
 
     @RequestMapping("/getConversationList")
     public ResultModel getConversationList() {
-        return ResultModel.success("success", "getConversationList", historyService.getConversationList());
+        List<String> conversationIds = historyService.getConversationList();
+        return ResultModel.success("success", "getConversationList", conversationIds);
     }
 
 }
