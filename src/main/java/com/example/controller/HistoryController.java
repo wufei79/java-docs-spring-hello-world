@@ -52,7 +52,7 @@ public class HistoryController {
         return ResultModel.success("success", "getConversationList", conversationIds);
     }
 
-    @RequestMapping("/getHistories")
+    @RequestMapping("/getHistories/{conversationId}")
     public ResultModel getHistories(@PathVariable("conversationId") String conversationId) throws Exception{
         HistoryExample example = new HistoryExample();
         example.createCriteria()
