@@ -57,7 +57,7 @@ public class AskController {
 
 	@RequestMapping(value="chat/question",method = RequestMethod.POST)
 	@ResponseBody
-    public ResultModel getChatAnswer(@RequestBody QuestionDTO questionDTO) throws Exception{
+    public ResultModel getChatAnswer(@RequestBody QuestionDTO questionDTO){
 		if (null==questionDTO) {
 			return ResultModel.error("questionDTO is null");
 		}
@@ -66,7 +66,12 @@ public class AskController {
 		}
 
 		String question = questionDTO.getQuestion();
-		String answer = ask.askChatQuestion(questionDTO);
+		String answer = "";
+		try {
+			answer = ask.askChatQuestion(questionDTO);
+		} catch(Exception ex) {
+			answer = ex.getMessage();
+		}
 		return ResultModel.success("success", question, answer);
 	}
 }
