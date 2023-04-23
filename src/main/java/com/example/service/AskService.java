@@ -11,6 +11,6 @@ public interface AskService {
 
     public String askCompletionQuestion(QuestionDTO questionDTO);
 
-    public String askChatQuestion(QuestionDTO questionDTO);
+    public String askChatQuestion(QuestionDTO questionDTO) throws Exception;
 
 }

@@ -39,13 +39,13 @@ public class AskServiceImpl implements AskService {
     }
 
     //private List<ChatMessage> conversation = new LinkedList<ChatMessage>();
-    private String currentConversationID = "";
+    //private String currentConversationID = "";
     private static final ObjectMapper mapper = new ObjectMapper();
 
     @Override
     public void clearConversation(String conversationId) {
         //conversation.clear();
-        this.currentConversationID = conversationId;
+        //this.currentConversationID = conversationId;
     }
 
     @Override
@@ -129,13 +129,13 @@ public class AskServiceImpl implements AskService {
     }
 
     @Override
-    public String askChatQuestion(QuestionDTO questionDTO) {
+    public String askChatQuestion(QuestionDTO questionDTO) throws Exception{
         String answer = "";
 
         //List<ChatMessage> messages = new LinkedList<ChatMessage>();
         //messages.add(conversation.forEach(null));
-        currentConversationID = StringUtils.isNotBlank(questionDTO.getConversationId())?questionDTO.getConversationId():currentConversationID;
-        List<ChatMessage> conversations = loadHistoryConversations(currentConversationID, questionDTO.getConversationLength());
+        //currentConversationID = StringUtils.isNotBlank(questionDTO.getConversationId())?questionDTO.getConversationId():currentConversationID;
+        List<ChatMessage> conversations = loadHistoryConversations(questionDTO.getConversationId(), questionDTO.getConversationLength());
         conversations.add(new ChatMessage(ChatMessageRole.USER.value(), questionDTO.getQuestion()));
 
         ChatCompletionRequest chatCompletionRequest = ChatCompletionRequest.builder()
@@ -148,7 +148,6 @@ public class AskServiceImpl implements AskService {
                 .build();
         
         //service.createCompletion(completionRequest).getChoices().forEach(System.out::println);
-        try {
             ChatCompletionResult chatCompletionResult = service.createChatCompletion(chatCompletionRequest);
             java.util.List<ChatCompletionChoice> choices = chatCompletionResult.getChoices();
             if (null != choices) {
@@ -160,7 +159,7 @@ public class AskServiceImpl implements AskService {
                     //conversation.add(new ChatMessage(ChatMessageRole.ASSISTANT.value(), answer));
 
                     History history = History.builder()
-                    .conversationId(currentConversationID)
+                    .conversationId(questionDTO.getConversationId())
                     .model(chatCompletionRequest.getModel())
                     .temperature(chatCompletionRequest.getTemperature())
                     .maxTokens(chatCompletionRequest.getMaxTokens())
@@ -180,24 +179,17 @@ public class AskServiceImpl implements AskService {
                 }
             }
             //System.out.println("Answer has " + choices.size() + " choices");
-        } catch(Exception ex) {
-            //conversation.remove(conversation.size()-1);
-
-            ex.printStackTrace();
-            answer = ex.getMessage();
-        }
 
         return answer;
 
     }
 
-    private LinkedList<ChatMessage> loadHistoryConversations(String conversationId, int conversationLength) {
+    private LinkedList<ChatMessage> loadHistoryConversations(String conversationId, int conversationLength) throws Exception {
         LinkedList<ChatMessage> conversations = new LinkedList<ChatMessage>();
         HistoryExample example = new HistoryExample();
         example.createCriteria().andConversationIdEqualTo(conversationId);
         example.setOrderByClause("id asc");
         
-        try {
             List<History> histories = historyService.selectByExample(example);
             if (null != histories) {
                 if (histories.size()>0) {
@@ -230,9 +222,6 @@ public class AskServiceImpl implements AskService {
                     }
                 }
             }
-        }catch(Exception ex) {
-            ex.printStackTrace();
-        }
         return conversations;
     }
 }
