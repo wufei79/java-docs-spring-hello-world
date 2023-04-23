@@ -6,6 +6,8 @@ import com.example.model.HistoryExample;
 import lombok.Builder;
 
 import java.util.List;
+import java.util.Map;
+
 import org.apache.ibatis.annotations.Param;
 
 public interface HistoryDAO {
@@ -31,5 +33,5 @@ public interface HistoryDAO {
 
     int updateByPrimaryKey(History record);
 
-    List<String> getConversationList();
+    List<Map<Integer, String>> getConversationList();
 }

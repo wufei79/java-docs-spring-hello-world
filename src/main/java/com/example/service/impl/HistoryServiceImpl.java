@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class HistoryServiceImpl implements HistoryService {
@@ -34,8 +35,26 @@ public class HistoryServiceImpl implements HistoryService {
     }
 
     @Override
-    public List<String> getConversationList() throws Exception{
+    public List<Map<Integer, String>> getConversationList() throws Exception{
         return HistoryDAO.getConversationList();
+    }
+
+    @Override
+    public List<History> getHistories(String conversationId) throws Exception {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getHistories'");
+    }
+
+    @Override
+    public int update(History history) throws Exception {
+        // TODO Auto-generated method stub
+        int result = 0;
+        try {
+            result = HistoryDAO.updateByPrimaryKeySelective(history);
+        } catch(Exception ex) {
+            ex.printStackTrace();
+        }
+        return result;
     }
 
 
