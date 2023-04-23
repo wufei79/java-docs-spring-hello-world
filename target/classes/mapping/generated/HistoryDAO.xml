@@ -303,6 +303,6 @@
     where id = #{id,jdbcType=INTEGER}
   </update>
   <select id="getConversationList" resultType="java.lang.String">
-    select distinct id,conversation_id from history
+    select distinct conversation_id from history
   </select>
 </mapper>

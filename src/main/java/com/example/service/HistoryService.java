@@ -9,7 +9,7 @@ import java.util.Map;
 public interface HistoryService {
     int insert(History history) throws Exception;
     List<History> selectByExample(HistoryExample example) throws Exception;
-    List<Map<Integer, String>> getConversationList() throws Exception;
+    List<String> getConversationList() throws Exception;
     List<History> getHistories(String conversationId) throws Exception;
     int update(History history) throws Exception;
 }

@@ -35,7 +35,7 @@ public class HistoryServiceImpl implements HistoryService {
     }
 
     @Override
-    public List<Map<Integer, String>> getConversationList() throws Exception{
+    public List<String> getConversationList() throws Exception{
         return HistoryDAO.getConversationList();
     }
 

@@ -33,5 +33,5 @@ public interface HistoryDAO {
 
     int updateByPrimaryKey(History record);
 
-    List<Map<Integer, String>> getConversationList();
+    List<String> getConversationList();
 }
