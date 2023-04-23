@@ -57,7 +57,7 @@ public class AskController {
 
 	@RequestMapping(value="chat/question",method = RequestMethod.POST)
 	@ResponseBody
-    public ResultModel getChatAnswer(@RequestBody QuestionDTO questionDTO){
+    public ResultModel getChatAnswer(@RequestBody QuestionDTO questionDTO) throws Exception{
 		if (null==questionDTO) {
 			return ResultModel.error("questionDTO is null");
 		}
